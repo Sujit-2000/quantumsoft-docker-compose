@@ -15,7 +15,7 @@ services:
       - mynetwork
 
   frontend:
-    image: sujit2000/frontend:1111
+    image: sujit2000/frontend:fixed
     ports:
       - "5502:80"
     depends_on:
