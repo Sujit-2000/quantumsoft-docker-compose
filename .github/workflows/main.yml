@@ -32,6 +32,16 @@ jobs:
       run: |
         docker compose build
         docker compose push
+  
+     
+     # Send docker-compose.yml to EC2 using SSM    
+    - name: Upload compose file to EC2 via SSM
+      run: |
+        aws ssm send-command \
+          --instance-ids ${{ secrets.EC2_INSTANCE_ID }} \
+          --document-name "AWS-RunShellScript" \
+          --parameters 'commands=["mkdir -p /home/ec2-user/app && cat <<EOF > /home/ec2-user/app/docker-compose.yml","'$(sed "s/\"/'/g" docker-compose.yml)'","EOF"]' \
+          --output text
 
     # Trigger deployment on EC2
     - name: Deploy using SSM
